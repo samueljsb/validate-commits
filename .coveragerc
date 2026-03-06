@@ -1,0 +1,15 @@
+[run]
+branch = true
+core = ctrace
+source_pkgs =
+    validate_commits
+    tests
+
+[report]
+fail_under = 100
+show_missing = true
+skip_covered = true
+skip_empty = true
+exclude_also =
+    case _ as unreachable:
+    assert_never\(.*?\)

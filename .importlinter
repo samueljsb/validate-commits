@@ -1,0 +1,9 @@
+[importlinter]
+root_package = validate_commits
+include_external_packages = True
+
+[importlinter:contract:architecture]
+name = Architecture
+type = independence
+modules =
+    validate_commits.*

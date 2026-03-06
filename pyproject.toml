@@ -1,0 +1,66 @@
+[project]
+name = "validate_commits"
+version = "0.0.0"
+authors = [
+    {name = "Samuel Searles-Bryant", email = "sam@samueljsb.co.uk"},
+]
+description = "validate commit messages and metadata"
+readme = "README.md"
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+classifiers = [  # pragma: alphabetize
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
+
+requires-python = ">=3.13"
+dependencies = []
+
+[project.scripts]
+validate-commits = "validate_commits.cli:main"
+
+[project.urls]
+Source = "https://github.com/samueljsb/validate-commits"
+Changelog = "https://github.com/samueljsb/validate-commits/blob/main/CHANGELOG.md"
+
+
+# Packaging
+# ---------
+
+[build-system]
+requires = ["setuptools>=77.0.3"]
+build-backend = "setuptools.build_meta"
+
+
+# Development
+# -----------
+
+[dependency-groups]
+dev = [
+    {include-group = "coverage"},
+    {include-group = "import_linter"},
+    {include-group = "mypy"},
+    {include-group = "tests"},
+    {include-group = "test_runners"},
+    "pre-commit",
+]
+
+coverage = [
+    "coverage",
+]
+import_linter = [
+    "import-linter",
+]
+mypy = [
+    {include-group = "tests"},
+    "mypy",
+]
+tests = [
+    "pytest",
+]
+test_runners = [
+    "tox",
+    "tox-uv",
+]
