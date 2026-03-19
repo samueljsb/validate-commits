@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 
 def git_repo(path: Path) -> git.Repo:
-    repo = git.Repo.init(path)
+    repo = git.Repo.init(path, initial_branch='main')
     repo.git.commit(allow_empty=True, message='initial')
     return repo
 

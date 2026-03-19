@@ -19,6 +19,6 @@ def cli(tmp_path: Path) -> helpers.CLI:
 
 @pytest.fixture
 def git_repo(tmp_path: Path) -> helpers.GitRepo:
-    repo = git.Repo.init(tmp_path)
+    repo = git.Repo.init(tmp_path, initial_branch='main')
     repo.git.commit(allow_empty=True, message='initial')
     return helpers.GitRepo(repo)
