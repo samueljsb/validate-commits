@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import git
 import pytest
 
 from tests import helpers
@@ -19,6 +18,5 @@ def cli(tmp_path: Path) -> helpers.CLI:
 
 @pytest.fixture
 def git_repo(tmp_path: Path) -> helpers.GitRepo:
-    repo = git.Repo.init(tmp_path)
-    repo.git.commit(allow_empty=True, message='initial')
+    repo = helpers.new_git_repo(tmp_path)
     return helpers.GitRepo(repo)

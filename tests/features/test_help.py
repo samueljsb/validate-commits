@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import TYPE_CHECKING
+from unittest import mock
 
 import pytest
 
@@ -13,7 +15,11 @@ if TYPE_CHECKING:
 def test_help_is_in_readme(
     cli: helpers.CLI, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    with pytest.raises(SystemExit) as exc_info:
+    with (
+        # Patching is required to ensure colours are not used in Python >= 3.14.
+        mock.patch.dict(os.environ, {'NO_COLOR': '1'}),  # noqa: TID251
+        pytest.raises(SystemExit) as exc_info,
+    ):
         cli('--help')
 
     assert exc_info.value.code == 0

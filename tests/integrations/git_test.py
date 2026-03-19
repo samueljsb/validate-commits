@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import git
-
 from tests import helpers
 from validate_commits.integrations import git as git_integration
 
@@ -12,15 +10,9 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
-def git_repo(path: Path) -> git.Repo:
-    repo = git.Repo.init(path)
-    repo.git.commit(allow_empty=True, message='initial')
-    return repo
-
-
 class TestCommits:
     def test_no_commits(self, tmp_path: Path) -> None:
-        repo = git_repo(tmp_path)
+        repo = helpers.new_git_repo(tmp_path)
         git_helper = helpers.GitRepo(repo)
         git_helper.checkout_new_branch('my-branch')
 
@@ -31,7 +23,7 @@ class TestCommits:
         assert commits == []
 
     def test_commits(self, tmp_path: Path) -> None:
-        repo = git_repo(tmp_path)
+        repo = helpers.new_git_repo(tmp_path)
         git_helper = helpers.GitRepo(repo)
         git_helper.checkout_new_branch('my-branch')
         git_helper.change_file('a')
