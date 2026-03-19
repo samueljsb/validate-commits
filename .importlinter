@@ -7,3 +7,25 @@ name = Architecture
 type = independence
 modules =
     validate_commits.*
+ignore_imports =
+    # The CLI composes an application.
+    validate_commits.cli -> validate_commits.**
+
+    # Integrations implement application dependencies.
+    validate_commits.integrations.** -> validate_commits.application
+
+[importlinter:contract:independent-integrations]
+name = Integrations are independent
+type = independence
+modules =
+    validate_commits.integrations.*
+
+[importlinter:contract:git]
+name = Git only used in its integration
+type = forbidden
+source_modules =
+    validate_commits.*
+forbidden_modules =
+    git
+ignore_imports =
+    validate_commits.integrations.git -> git

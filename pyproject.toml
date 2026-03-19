@@ -16,7 +16,10 @@ classifiers = [  # pragma: alphabetize
 ]
 
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [  # pragma: alphabetize
+    "GitPython",
+    "attrs",
+]
 
 [project.scripts]
 validate-commits = "validate_commits.cli:main"
