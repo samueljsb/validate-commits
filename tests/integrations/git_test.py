@@ -14,6 +14,10 @@ if TYPE_CHECKING:
 
 def git_repo(path: Path) -> git.Repo:
     repo = git.Repo.init(path, initial_branch='main')
+    with repo.config_writer() as config:
+        config.add_section('user')
+        config.set('user', 'name', 'Test User')
+        config.set('user', 'email', 'test.user@example.com')
     repo.git.commit(allow_empty=True, message='initial')
     return repo
 
