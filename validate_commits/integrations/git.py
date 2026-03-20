@@ -34,7 +34,7 @@ class Commits:
     _repo: git.Repo = attrs.field(factory=_get_repo)
 
     def __call__(self, since: str, to: str) -> Generator[Commit]:
-        for commit in self._repo.iter_commits(f'{since}...{to}'):
+        for commit in self._repo.iter_commits(f'{since}..{to}'):
             short_sha = self._repo.git.rev_parse(commit.hexsha, short=True)
 
             if isinstance(commit.summary, bytes):  # pragma: no cover
