@@ -25,8 +25,8 @@ class GitRepo:
 
     author: str = 'April May <april.may@example.com>'
 
-    def checkout_new_branch(self, name: str) -> None:
-        self._repo.create_head(name).checkout()
+    def checkout_new_branch(self, name: str, base: str = 'HEAD') -> None:
+        self._repo.create_head(name, commit=base).checkout()
 
     def change_file(self, file_name: str) -> None:
         new_file = Path(self._repo.working_dir) / file_name

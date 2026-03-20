@@ -56,3 +56,40 @@ class TestCommits:
                 is_empty=False,
             ),
         ]
+
+    def test_commits_when_branch_behind_main(self, tmp_path: Path) -> None:
+        """
+        Unrelated commits are ignored.
+
+        When there are commits on 'main' *after* the current branch diverged,
+        they should not be reported.
+        """
+        repo = helpers.new_git_repo(tmp_path)
+        git_helper = helpers.GitRepo(repo)
+        # Create a base commit that can be branched from.
+        base = git_helper.commit(allow_empty=True)
+        # Add another commit on 'main' after the base commit.
+        git_helper.commit('This commit should be ignored', allow_empty=True)
+
+        # Create a new branch from the base commit.
+        git_helper.checkout_new_branch('my-branch', base=base)
+        commit_sha = git_helper.commit(
+            'A commit message',
+            author='April May <april.may@example.com>',
+            allow_empty=True,
+        )
+
+        get_commits = git_integration.Commits(repo)
+
+        commits = list(get_commits(since='main', to='HEAD'))
+
+        # Only the commit on 'my-branch' is retrieved.
+        assert commits == [
+            git_integration.Commit(
+                sha=commit_sha,
+                author_name='April May',
+                author_email='april.may@example.com',
+                summary='A commit message',
+                is_empty=True,
+            ),
+        ]
