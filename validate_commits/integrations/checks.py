@@ -26,5 +26,5 @@ def commit_is_not_empty(commit: Commit) -> Generator[str]:
 
 
 def commit_is_not_fixup(commit: Commit) -> Generator[str]:
-    if any(commit.summary.startswith(prefix) for prefix in ('fixup!', '!fixup')):
+    if commit.summary.startswith('fixup!'):
         yield 'Fixup commit.'
