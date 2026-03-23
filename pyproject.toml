@@ -19,6 +19,7 @@ requires-python = ">=3.13"
 dependencies = [  # pragma: alphabetize
     "GitPython",
     "attrs",
+    "cattrs",
 ]
 
 [project.scripts]

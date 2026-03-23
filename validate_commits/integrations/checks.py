@@ -1,12 +1,66 @@
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING
+from typing import Protocol
+
+import attrs
 
 
 if TYPE_CHECKING:
     from collections.abc import Generator
 
     from validate_commits.application import Commit
+
+
+# Custom checks
+# -------------
+
+
+class _Config(Protocol):
+    @property
+    def checks(self) -> _ConfigChecks: ...
+
+
+class _ConfigChecks(Protocol):
+    @property
+    def summary(self) -> tuple[_RegexpCheck, ...]: ...
+
+
+class _RegexpCheck(Protocol):
+    @property
+    def pattern(self) -> str: ...
+
+    @property
+    def message(self) -> str: ...
+
+
+@attrs.frozen
+class SummaryRegexpCheck:
+    pattern: str
+    message: str
+
+    def __call__(self, commit: Commit) -> Generator[str]:
+        if re.search(self.pattern, commit.summary):
+            yield self.message
+
+
+type CustomCheck = SummaryRegexpCheck
+
+
+def get_custom_checks(config: _Config) -> list[CustomCheck]:
+    checks = []
+
+    for definition in config.checks.summary:
+        checks.append(  # noqa: PERF401
+            SummaryRegexpCheck(pattern=definition.pattern, message=definition.message)
+        )
+
+    return checks
+
+
+# Built-in checks
+# ---------------
 
 
 def author_has_email(commit: Commit) -> Generator[str]:
