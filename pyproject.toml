@@ -1,6 +1,6 @@
 [project]
 name = "validate_commits"
-version = "0.0.0"
+version = "0.0.1"
 authors = [
     {name = "Samuel Searles-Bryant", email = "sam@samueljsb.co.uk"},
 ]
