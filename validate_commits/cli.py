@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from validate_commits import application
 from validate_commits.integrations import checks
+from validate_commits.integrations import configuration
 from validate_commits.integrations import console as console_integration
 from validate_commits.integrations import git as git_integration
 
@@ -15,6 +17,9 @@ if TYPE_CHECKING:
 
 
 def _build_app() -> application.App:
+    config_file = Path('.validate-commits-config.toml')
+    config = configuration.load_from_file(config_file)
+
     git_commits = git_integration.Commits()
 
     default_checks = (
@@ -22,10 +27,14 @@ def _build_app() -> application.App:
         checks.commit_is_not_empty,
         checks.commit_is_not_fixup,
     )
+    custom_checks = checks.get_custom_checks(config)
 
     return application.App(
         commits=git_commits('main', 'HEAD'),
-        checks=default_checks,
+        checks=(
+            *default_checks,
+            *custom_checks,
+        ),
         report_error=console_integration.report_error,
         report_summary=console_integration.report_summary,
     )
