@@ -23,7 +23,8 @@ There are several built-in rules,
 which are checked automatically:
 
 - "Commit author has no email"
-  -- all commits must have an author email.
+  -- all commits must have an author email
+  and all co-authors (in `Co-authored-by` trailers) must have an email.
 - "Commit is empty"
   -- empty commits are not allowed.
 - "Fixup commit"
@@ -49,7 +50,7 @@ message = "Numbers in commit summary."
 
 ### Author email
 
-Checks for author email addresses
+Checks for author and co-author email addresses
 may be defined in a `[[checks.author_email]]` table,
 e.g:
 

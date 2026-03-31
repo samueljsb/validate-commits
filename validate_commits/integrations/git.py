@@ -8,6 +8,7 @@ import git
 
 if TYPE_CHECKING:
     from collections.abc import Generator
+    from collections.abc import Sequence
 
 
 @attrs.frozen
@@ -15,14 +16,20 @@ class Commit:
     sha: str
 
     # Author
-    author_name: str
-    author_email: str
+    author: Author
+    co_authors: Sequence[Author]
 
     # Message
     summary: str
 
     # Content
     is_empty: bool
+
+
+@attrs.frozen
+class Author:
+    name: str | None
+    email: str | None
 
 
 def _get_repo() -> git.Repo:
@@ -48,8 +55,17 @@ class Commits:
 
             yield Commit(
                 sha=short_sha,
-                author_name=commit.author.name or '',
-                author_email=commit.author.email or '',
+                author=Author(
+                    name=commit.author.name,
+                    email=commit.author.email,
+                ),
+                co_authors=[
+                    Author(
+                        name=co_author.name,
+                        email=co_author.email,
+                    )
+                    for co_author in commit.co_authors
+                ],
                 summary=commit_summary,
                 is_empty=not bool(changed_files),
             )

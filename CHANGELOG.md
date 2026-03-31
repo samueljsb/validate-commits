@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Custom checks for author email addresses.
+- Custom checks for author and co-author email addresses.
   These can be configured in a `checks.author-email` table,
   e.g:
 
@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     pattern = '@example\.(com|net|org)$'
     message = "Fake email address provided."
     ```
+
+### Changed
+
+- "Commit author has no email" now also checks co-author emails,
+  as determined from `Co-authored-by` trailers.
 
 ## [0.0.1] - 2026-03-23
 
