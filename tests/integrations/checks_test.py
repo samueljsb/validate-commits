@@ -85,7 +85,10 @@ class TestSummaryRegexpCheck:
 class TestAuthorEmailRegexpCheck:
     def test_matches(self) -> None:
         commit = mock.Mock(
-            spec_set=application.Commit, author_email='april.may@example.com'
+            spec_set=application.Commit,
+            author=mock.Mock(
+                spec_set=application.Author, email='april.may@example.com'
+            ),
         )
         regexp_check = checks.AuthorEmailRegexpCheck(
             pattern=r'@example\.com$',
@@ -98,7 +101,10 @@ class TestAuthorEmailRegexpCheck:
 
     def test_no_matches(self) -> None:
         commit = mock.Mock(
-            spec_set=application.Commit, author_email='april.may@example.net'
+            spec_set=application.Commit,
+            author=mock.Mock(
+                spec_set=application.Author, email='april.may@example.net'
+            ),
         )
         regexp_check = checks.AuthorEmailRegexpCheck(
             pattern=r'@example\.com$',

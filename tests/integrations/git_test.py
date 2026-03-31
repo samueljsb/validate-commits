@@ -43,15 +43,19 @@ class TestCommits:
         assert commits == [
             git_integration.Commit(
                 sha=empty_sha,
-                author_name='Andy Skampt',
-                author_email='andy.skampt@example.com',
+                author=git_integration.Author(
+                    name='Andy Skampt',
+                    email='andy.skampt@example.com',
+                ),
                 summary='Empty commit',
                 is_empty=True,
             ),
             git_integration.Commit(
                 sha=first_sha,
-                author_name='April May',
-                author_email='april.may@example.com',
+                author=git_integration.Author(
+                    name='April May',
+                    email='april.may@example.com',
+                ),
                 summary='First commit message',
                 is_empty=False,
             ),
@@ -87,8 +91,10 @@ class TestCommits:
         assert commits == [
             git_integration.Commit(
                 sha=commit_sha,
-                author_name='April May',
-                author_email='april.may@example.com',
+                author=git_integration.Author(
+                    name='April May',
+                    email='april.may@example.com',
+                ),
                 summary='A commit message',
                 is_empty=True,
             ),

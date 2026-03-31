@@ -54,7 +54,7 @@ class AuthorEmailRegexpCheck:
     message: str
 
     def __call__(self, commit: Commit) -> Generator[str]:
-        if re.search(self.pattern, commit.author_email):
+        if commit.author.email and re.search(self.pattern, commit.author.email):
             yield self.message
 
 
@@ -84,7 +84,7 @@ def get_custom_checks(config: _Config) -> list[CustomCheck]:
 
 
 def author_has_email(commit: Commit) -> Generator[str]:
-    if not commit.author_email:
+    if not commit.author.email:
         yield """\
 Commit author has no email.
 

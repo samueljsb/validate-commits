@@ -15,14 +15,19 @@ class Commit:
     sha: str
 
     # Author
-    author_name: str
-    author_email: str
+    author: Author
 
     # Message
     summary: str
 
     # Content
     is_empty: bool
+
+
+@attrs.frozen
+class Author:
+    name: str | None
+    email: str | None
 
 
 def _get_repo() -> git.Repo:
@@ -48,8 +53,10 @@ class Commits:
 
             yield Commit(
                 sha=short_sha,
-                author_name=commit.author.name or '',
-                author_email=commit.author.email or '',
+                author=Author(
+                    name=commit.author.name,
+                    email=commit.author.email,
+                ),
                 summary=commit_summary,
                 is_empty=not bool(changed_files),
             )

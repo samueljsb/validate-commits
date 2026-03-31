@@ -5,6 +5,7 @@ from unittest import mock
 import pytest
 
 from validate_commits import application
+from validate_commits.application import Author
 from validate_commits.application import Commit
 from validate_commits.application import Error
 
@@ -49,7 +50,7 @@ class TestApp:
             spec_set=Commit,
             sha='abc123',
             summary='Change a thing',
-            author_email='april.may@example.com',
+            author=mock.Mock(spec_set=Author, email='april.may@example.com'),
         )
         report_error = mock.Mock()
         report_summary = mock.Mock(spec_set=application.App.SummaryReport)
