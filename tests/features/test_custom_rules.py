@@ -85,3 +85,49 @@ error: {commit_sha} (A commit)
 Found 1 errors in 1 commits between 'main' and 'HEAD' (checked 1 commits).
 """
     )
+
+
+def test_coauthor_email_regexp(
+    tmp_path: Path,
+    git_repo: helpers.GitRepo,
+    cli: helpers.CLI,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    config_file = tmp_path / '.validate-commits-config.toml'
+    config_file.write_text(r"""
+[[checks.author_email]]
+pattern = '@example\.com$'
+message = "Fake email address provided."
+""")
+
+    git_repo.checkout_new_branch('my-feature')
+    git_repo.change_file('a')
+    commit_sha = git_repo.commit(
+        message="""\
+A commit
+
+The co-author of this commit has an email address that is not allowed.
+
+Co-authored-by: Andy Skampt <andy.skampt@example.com>
+""",
+        author='April May <april.may@example.net>',
+    )
+
+    ret = cli()
+
+    assert ret == 1
+
+    stdout, stderr = capsys.readouterr()
+    assert (
+        stdout
+        == f"""\
+error: {commit_sha} (A commit)
+    Fake email address provided.
+"""
+    )
+    assert (
+        stderr
+        == """\
+Found 1 errors in 1 commits between 'main' and 'HEAD' (checked 1 commits).
+"""
+    )

@@ -8,6 +8,7 @@ import git
 
 if TYPE_CHECKING:
     from collections.abc import Generator
+    from collections.abc import Sequence
 
 
 @attrs.frozen
@@ -16,6 +17,7 @@ class Commit:
 
     # Author
     author: Author
+    co_authors: Sequence[Author]
 
     # Message
     summary: str
@@ -57,6 +59,13 @@ class Commits:
                     name=commit.author.name,
                     email=commit.author.email,
                 ),
+                co_authors=[
+                    Author(
+                        name=co_author.name,
+                        email=co_author.email,
+                    )
+                    for co_author in commit.co_authors
+                ],
                 summary=commit_summary,
                 is_empty=not bool(changed_files),
             )

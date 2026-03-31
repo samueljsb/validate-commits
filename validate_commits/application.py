@@ -20,6 +20,9 @@ class Commit(Protocol):
     def author(self) -> Author: ...
 
     @property
+    def co_authors(self) -> Sequence[Author]: ...
+
+    @property
     def summary(self) -> str: ...
 
     @property

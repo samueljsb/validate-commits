@@ -54,8 +54,10 @@ class AuthorEmailRegexpCheck:
     message: str
 
     def __call__(self, commit: Commit) -> Generator[str]:
-        if commit.author.email and re.search(self.pattern, commit.author.email):
-            yield self.message
+        authors_to_check = (commit.author, *commit.co_authors)
+        for author in authors_to_check:
+            if author.email and re.search(self.pattern, author.email):
+                yield self.message
 
 
 type CustomCheck = AuthorEmailRegexpCheck | SummaryRegexpCheck
@@ -91,6 +93,12 @@ Commit author has no email.
 Make sure you have an author email set in your git config, e.g:
 
     git config user.email "your.name@example.com"
+"""
+
+    for co_author in commit.co_authors:
+        if not co_author.email:
+            yield """\
+Commit co-author has no email.
 """
 
 

@@ -83,12 +83,32 @@ class TestSummaryRegexpCheck:
 
 
 class TestAuthorEmailRegexpCheck:
-    def test_matches(self) -> None:
+    def test_commit_author_matches(self) -> None:
         commit = mock.Mock(
             spec_set=application.Commit,
             author=mock.Mock(
                 spec_set=application.Author, email='april.may@example.com'
             ),
+            co_authors=[],
+        )
+        regexp_check = checks.AuthorEmailRegexpCheck(
+            pattern=r'@example\.com$',
+            message='Fake email address provided.',
+        )
+
+        errors = regexp_check(commit)
+
+        assert list(errors) == ['Fake email address provided.']
+
+    def test_co_author_matches(self) -> None:
+        commit = mock.Mock(
+            spec_set=application.Commit,
+            author=mock.Mock(
+                spec_set=application.Author, email='april.may@example.net'
+            ),
+            co_authors=[
+                mock.Mock(spec_set=application.Author, email='andy.skampt@example.com')
+            ],
         )
         regexp_check = checks.AuthorEmailRegexpCheck(
             pattern=r'@example\.com$',
@@ -105,6 +125,7 @@ class TestAuthorEmailRegexpCheck:
             author=mock.Mock(
                 spec_set=application.Author, email='april.may@example.net'
             ),
+            co_authors=[],
         )
         regexp_check = checks.AuthorEmailRegexpCheck(
             pattern=r'@example\.com$',
@@ -123,11 +144,74 @@ class TestAuthorHasEmail:
             author=mock.Mock(
                 spec_set=application.Author, email='april.may@example.com'
             ),
+            co_authors=[
+                mock.Mock(spec_set=application.Author, email='andy.skampt@example.com')
+            ],
         )
 
         errors = checks.author_has_email(commit)
 
         assert list(errors) == []
+
+    def test_author_has_no_email(self) -> None:
+        commit = mock.Mock(
+            spec_set=application.Commit,
+            author=mock.Mock(spec_set=application.Author, email=None),
+            co_authors=[
+                mock.Mock(spec_set=application.Author, email='andy.skampt@example.com')
+            ],
+        )
+
+        errors = checks.author_has_email(commit)
+
+        assert list(errors) == [
+            """\
+Commit author has no email.
+
+Make sure you have an author email set in your git config, e.g:
+
+    git config user.email "your.name@example.com"
+""",
+        ]
+
+    def test_co_author_has_no_email(self) -> None:
+        commit = mock.Mock(
+            spec_set=application.Commit,
+            author=mock.Mock(
+                spec_set=application.Author, email='april.may@example.com'
+            ),
+            co_authors=[mock.Mock(spec_set=application.Author, email=None)],
+        )
+
+        errors = checks.author_has_email(commit)
+
+        assert list(errors) == [
+            """\
+Commit co-author has no email.
+""",
+        ]
+
+    def test_neither_author_has_email(self) -> None:
+        commit = mock.Mock(
+            spec_set=application.Commit,
+            author=mock.Mock(spec_set=application.Author, email=None),
+            co_authors=[mock.Mock(spec_set=application.Author, email=None)],
+        )
+
+        errors = checks.author_has_email(commit)
+
+        assert list(errors) == [
+            """\
+Commit author has no email.
+
+Make sure you have an author email set in your git config, e.g:
+
+    git config user.email "your.name@example.com"
+""",
+            """\
+Commit co-author has no email.
+""",
+        ]
 
 
 class TestCommitIsNotFixup:

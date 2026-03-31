@@ -35,6 +35,16 @@ class TestCommits:
             author='Andy Skampt <andy.skampt@example.com>',
             allow_empty=True,
         )
+        co_authored_sha = git_helper.commit(
+            """\
+Commit with co-authors
+
+Co-authored-by: Andy Skampt <andy.skampt@example.com>
+Co-authored-by: Miranda Beckwith <miranda.beckwith@example.com>
+""",
+            author='April May <april.may@example.com>',
+            allow_empty=True,
+        )
 
         get_commits = git_integration.Commits(repo)
 
@@ -42,11 +52,31 @@ class TestCommits:
 
         assert commits == [
             git_integration.Commit(
+                sha=co_authored_sha,
+                author=git_integration.Author(
+                    name='April May',
+                    email='april.may@example.com',
+                ),
+                co_authors=[
+                    git_integration.Author(
+                        name='Andy Skampt',
+                        email='andy.skampt@example.com',
+                    ),
+                    git_integration.Author(
+                        name='Miranda Beckwith',
+                        email='miranda.beckwith@example.com',
+                    ),
+                ],
+                summary='Commit with co-authors',
+                is_empty=True,
+            ),
+            git_integration.Commit(
                 sha=empty_sha,
                 author=git_integration.Author(
                     name='Andy Skampt',
                     email='andy.skampt@example.com',
                 ),
+                co_authors=[],
                 summary='Empty commit',
                 is_empty=True,
             ),
@@ -56,6 +86,7 @@ class TestCommits:
                     name='April May',
                     email='april.may@example.com',
                 ),
+                co_authors=[],
                 summary='First commit message',
                 is_empty=False,
             ),
@@ -95,6 +126,7 @@ class TestCommits:
                     name='April May',
                     email='april.may@example.com',
                 ),
+                co_authors=[],
                 summary='A commit message',
                 is_empty=True,
             ),
