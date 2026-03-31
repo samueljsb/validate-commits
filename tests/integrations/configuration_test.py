@@ -18,6 +18,7 @@ class TestLoadConfig:
         assert config == configuration.Config(
             checks=configuration.Checks(
                 summary=(),
+                author_email=(),
             ),
         )
 
@@ -30,6 +31,7 @@ class TestLoadConfig:
         assert config == configuration.Config(
             checks=configuration.Checks(
                 summary=(),
+                author_email=(),
             ),
         )
 
@@ -43,6 +45,10 @@ message = "Numbers in commit summary."
 [[checks.summary]]
 pattern = '\.$'
 message = "Ends with a full stop."
+
+[[checks.author_email]]
+pattern = '@example\.com$'
+message = "Fake email address provided."
 """)
 
         config = configuration.load_from_file(config_file)
@@ -57,6 +63,12 @@ message = "Ends with a full stop."
                     configuration.Check(
                         pattern=r'\.$',
                         message='Ends with a full stop.',
+                    ),
+                ),
+                author_email=(
+                    configuration.Check(
+                        pattern=r'@example\.com$',
+                        message='Fake email address provided.',
                     ),
                 ),
             ),

@@ -26,6 +26,9 @@ class _ConfigChecks(Protocol):
     @property
     def summary(self) -> tuple[_RegexpCheck, ...]: ...
 
+    @property
+    def author_email(self) -> tuple[_RegexpCheck, ...]: ...
+
 
 class _RegexpCheck(Protocol):
     @property
@@ -45,15 +48,32 @@ class SummaryRegexpCheck:
             yield self.message
 
 
-type CustomCheck = SummaryRegexpCheck
+@attrs.frozen
+class AuthorEmailRegexpCheck:
+    pattern: str
+    message: str
+
+    def __call__(self, commit: Commit) -> Generator[str]:
+        if re.search(self.pattern, commit.author_email):
+            yield self.message
+
+
+type CustomCheck = AuthorEmailRegexpCheck | SummaryRegexpCheck
 
 
 def get_custom_checks(config: _Config) -> list[CustomCheck]:
-    checks = []
+    checks: list[CustomCheck] = []
 
     for definition in config.checks.summary:
         checks.append(  # noqa: PERF401
             SummaryRegexpCheck(pattern=definition.pattern, message=definition.message)
+        )
+
+    for definition in config.checks.author_email:
+        checks.append(  # noqa: PERF401
+            AuthorEmailRegexpCheck(
+                pattern=definition.pattern, message=definition.message
+            )
         )
 
     return checks

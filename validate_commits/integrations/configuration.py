@@ -20,6 +20,7 @@ class Check:
 @attrs.frozen
 class Checks:
     summary: tuple[Check, ...] = ()
+    author_email: tuple[Check, ...] = ()
 
 
 @attrs.frozen

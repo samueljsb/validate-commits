@@ -36,6 +36,27 @@ class TestGetCustomChecks:
             ),
         ]
 
+    def test_author_email_regexp_check(self) -> None:
+        config = configuration.Config(
+            checks=configuration.Checks(
+                author_email=(
+                    configuration.Check(
+                        pattern=r'@example\.com$',
+                        message='Fake email address provided.',
+                    ),
+                ),
+            ),
+        )
+
+        custom_checks = checks.get_custom_checks(config)
+
+        assert custom_checks == [
+            checks.AuthorEmailRegexpCheck(
+                pattern=r'@example\.com$',
+                message='Fake email address provided.',
+            ),
+        ]
+
 
 class TestSummaryRegexpCheck:
     def test_matches(self) -> None:
@@ -54,6 +75,34 @@ class TestSummaryRegexpCheck:
         regexp_check = checks.SummaryRegexpCheck(
             pattern=r'\d+',
             message='Summary contains numbers.',
+        )
+
+        errors = regexp_check(commit)
+
+        assert list(errors) == []
+
+
+class TestAuthorEmailRegexpCheck:
+    def test_matches(self) -> None:
+        commit = mock.Mock(
+            spec_set=application.Commit, author_email='april.may@example.com'
+        )
+        regexp_check = checks.AuthorEmailRegexpCheck(
+            pattern=r'@example\.com$',
+            message='Fake email address provided.',
+        )
+
+        errors = regexp_check(commit)
+
+        assert list(errors) == ['Fake email address provided.']
+
+    def test_no_matches(self) -> None:
+        commit = mock.Mock(
+            spec_set=application.Commit, author_email='april.may@example.net'
+        )
+        regexp_check = checks.AuthorEmailRegexpCheck(
+            pattern=r'@example\.com$',
+            message='Fake email address provided.',
         )
 
         errors = regexp_check(commit)
