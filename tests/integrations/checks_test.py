@@ -116,6 +116,20 @@ class TestAuthorEmailRegexpCheck:
         assert list(errors) == []
 
 
+class TestAuthorHasEmail:
+    def test_no_problems(self) -> None:
+        commit = mock.Mock(
+            spec_set=application.Commit,
+            author=mock.Mock(
+                spec_set=application.Author, email='april.may@example.com'
+            ),
+        )
+
+        errors = checks.author_has_email(commit)
+
+        assert list(errors) == []
+
+
 class TestCommitIsNotFixup:
     def test_no_problem(self) -> None:
         commit = mock.Mock(spec_set=application.Commit, summary='Make some changes')
