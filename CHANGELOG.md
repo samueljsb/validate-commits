@@ -23,6 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - "Commit author has no email" now also checks co-author emails,
   as determined from `Co-authored-by` trailers.
+- Error messages now indicate why a check failed,
+  by showing the name of the author without an email
+  or the portion of a summary/email that matched a custom rule.
 
 ## [0.0.1] - 2026-03-23
 
