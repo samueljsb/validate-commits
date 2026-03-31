@@ -33,13 +33,28 @@ which are checked automatically:
 
 Custom rules may be provided in a `validate-commits-config.toml` file.
 Rules must be provided as a regular expression pattern and an error message
-and will be checked against the commit summary.
+and will be checked against the designated target.
 
-Custom rules should be defined in a `[[checks.summary]]` table,
+### Commit summary
+
+Checks for the commit summary (the first line of the commit message)
+may be defined in a `[[checks.summary]]` table,
 e.g:
 
 ```toml
 [[checks.summary]]
 pattern = '\d'
 message = "Numbers in commit summary."
+```
+
+### Author email
+
+Checks for author email addresses
+may be defined in a `[[checks.author_email]]` table,
+e.g:
+
+```toml
+[[checks.author_email]]
+pattern = '@example\.(com|net|org)$'
+message = "Fake email address provided."
 ```

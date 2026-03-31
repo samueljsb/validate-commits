@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Custom checks for author email addresses.
+  These can be configured in a `checks.author-email` table,
+  e.g:
+
+    ```toml
+    [[checks.author_email]]
+    pattern = '@example\.(com|net|org)$'
+    message = "Fake email address provided."
+    ```
+
 ## [0.0.1] - 2026-03-23
 
 The first release of this tool.
