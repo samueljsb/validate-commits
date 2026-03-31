@@ -72,7 +72,7 @@ def test_commit_with_missing_required_information(
         stdout
         == f"""\
 error: {commit_sha} (A bad commit)
-    Commit author has no email.
+    Commit author 'Andy Skampt' has no email.
 
     Make sure you have an author email set in your git config, e.g:
 

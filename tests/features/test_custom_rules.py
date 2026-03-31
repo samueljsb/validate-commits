@@ -37,6 +37,8 @@ message = "Numbers in commit summary."
         stdout
         == f"""\
 error: {commit_sha} (There is 1 change in this commit)
+    match: 'There is 1 change in this commit'
+                     ^
     Numbers in commit summary.
 """
     )
@@ -76,6 +78,8 @@ message = "Fake email address provided."
         stdout
         == f"""\
 error: {commit_sha} (A commit)
+    match: 'april.may@example.com'
+                     ^^^^^^^^^^^^
     Fake email address provided.
 """
     )
@@ -122,6 +126,8 @@ Co-authored-by: Andy Skampt <andy.skampt@example.com>
         stdout
         == f"""\
 error: {commit_sha} (A commit)
+    match: 'andy.skampt@example.com'
+                       ^^^^^^^^^^^^
     Fake email address provided.
 """
     )
