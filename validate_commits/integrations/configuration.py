@@ -12,14 +12,14 @@ if TYPE_CHECKING:
 
 
 @attrs.frozen
-class SummaryCheck:
+class Check:
     pattern: str
     message: str
 
 
 @attrs.frozen
 class Checks:
-    summary: tuple[SummaryCheck, ...] = ()
+    summary: tuple[Check, ...] = ()
 
 
 @attrs.frozen

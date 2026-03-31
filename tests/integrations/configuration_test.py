@@ -50,11 +50,11 @@ message = "Ends with a full stop."
         assert config == configuration.Config(
             checks=configuration.Checks(
                 summary=(
-                    configuration.SummaryCheck(
+                    configuration.Check(
                         pattern=r'\d',
                         message='Numbers in commit summary.',
                     ),
-                    configuration.SummaryCheck(
+                    configuration.Check(
                         pattern=r'\.$',
                         message='Ends with a full stop.',
                     ),

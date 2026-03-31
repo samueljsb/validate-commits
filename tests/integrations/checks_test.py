@@ -19,7 +19,7 @@ class TestGetCustomChecks:
         config = configuration.Config(
             checks=configuration.Checks(
                 summary=(
-                    configuration.SummaryCheck(
+                    configuration.Check(
                         pattern=r'\d+',
                         message='Commit summary contains numbers',
                     ),
