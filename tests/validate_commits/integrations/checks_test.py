@@ -7,6 +7,15 @@ from validate_commits.integrations import checks
 from validate_commits.integrations import configuration
 
 
+def _mock_author(
+    name: str | None = None, email: str | None = None
+) -> application.Author:
+    author = mock.Mock(spec_set=application.Author)
+    # The `name` attribute cannot be set directly.
+    author.configure_mock(name=name, email=email)
+    return author
+
+
 class TestGetCustomChecks:
     def test_no_custom_checks(self) -> None:
         config = configuration.Config()
@@ -86,9 +95,7 @@ class TestAuthorEmailRegexpCheck:
     def test_commit_author_matches(self) -> None:
         commit = mock.Mock(
             spec_set=application.Commit,
-            author=mock.Mock(
-                spec_set=application.Author, email='april.may@example.com'
-            ),
+            author=_mock_author(email='april.may@example.com'),
             co_authors=[],
         )
         regexp_check = checks.AuthorEmailRegexpCheck(
@@ -103,12 +110,8 @@ class TestAuthorEmailRegexpCheck:
     def test_co_author_matches(self) -> None:
         commit = mock.Mock(
             spec_set=application.Commit,
-            author=mock.Mock(
-                spec_set=application.Author, email='april.may@example.net'
-            ),
-            co_authors=[
-                mock.Mock(spec_set=application.Author, email='andy.skampt@example.com')
-            ],
+            author=_mock_author(email='april.may@example.net'),
+            co_authors=[_mock_author(email='andy.skampt@example.com')],
         )
         regexp_check = checks.AuthorEmailRegexpCheck(
             pattern=r'@example\.com$',
@@ -122,9 +125,7 @@ class TestAuthorEmailRegexpCheck:
     def test_no_matches(self) -> None:
         commit = mock.Mock(
             spec_set=application.Commit,
-            author=mock.Mock(
-                spec_set=application.Author, email='april.may@example.net'
-            ),
+            author=_mock_author(email='april.may@example.net'),
             co_authors=[],
         )
         regexp_check = checks.AuthorEmailRegexpCheck(
@@ -141,12 +142,8 @@ class TestAuthorHasEmail:
     def test_no_problems(self) -> None:
         commit = mock.Mock(
             spec_set=application.Commit,
-            author=mock.Mock(
-                spec_set=application.Author, email='april.may@example.com'
-            ),
-            co_authors=[
-                mock.Mock(spec_set=application.Author, email='andy.skampt@example.com')
-            ],
+            author=_mock_author(email='april.may@example.com'),
+            co_authors=[_mock_author(email='andy.skampt@example.com')],
         )
 
         errors = checks.author_has_email(commit)
@@ -156,9 +153,9 @@ class TestAuthorHasEmail:
     def test_author_has_no_email(self) -> None:
         commit = mock.Mock(
             spec_set=application.Commit,
-            author=mock.Mock(spec_set=application.Author, email=None),
+            author=_mock_author(email=None),
             co_authors=[
-                mock.Mock(spec_set=application.Author, email='andy.skampt@example.com')
+                _mock_author(email='andy.skampt@example.com'),
             ],
         )
 
