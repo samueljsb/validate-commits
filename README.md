@@ -6,10 +6,11 @@ Validate commit messages and metadata.
 
 ```console
 $ validate-commits --help
-usage: validate-commits [-h]
+usage: validate-commits [-h] [--since SINCE]
 
 options:
-  -h, --help  show this help message and exit
+  -h, --help     show this help message and exit
+  --since SINCE  check commits since this reference
 ```
 
 The tool will check all commits

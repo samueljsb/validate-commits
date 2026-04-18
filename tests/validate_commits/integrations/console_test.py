@@ -23,7 +23,7 @@ class TestReporter:
             message='Something is wrong with this commit.',
         )
 
-        reporter = console.Reporter()
+        reporter = console.Reporter(base_ref='base-branch')
         reporter.report_error(error)
 
         stdout, stderr = capsys.readouterr()
@@ -37,7 +37,7 @@ error: abc123 (Make some changes to some files)
         assert stderr == ''
 
     def test_report_summary_no_errors(self, capsys: pytest.CaptureFixture[str]) -> None:
-        reporter = console.Reporter()
+        reporter = console.Reporter(base_ref='base-branch')
         reporter.report_summary(errors=(), commits_checked=4)
 
         stdout, stderr = capsys.readouterr()
@@ -45,12 +45,12 @@ error: abc123 (Make some changes to some files)
         assert (
             stderr
             == """\
-No issues found in 4 commits between 'main' and 'HEAD'.
+No issues found in 4 commits between 'base-branch' and 'HEAD'.
 """
         )
 
     def test_report_summary_errors(self, capsys: pytest.CaptureFixture[str]) -> None:
-        reporter = console.Reporter()
+        reporter = console.Reporter(base_ref='base-branch')
         reporter.report_summary(
             errors=(
                 Error(commit=mock.Mock(spec_set=Commit, sha='abc123'), message=''),
@@ -65,6 +65,6 @@ No issues found in 4 commits between 'main' and 'HEAD'.
         assert (
             stderr
             == """\
-Found 3 errors in 2 commits between 'main' and 'HEAD' (checked 4 commits).
+Found 3 errors in 2 commits between 'base-branch' and 'HEAD' (checked 4 commits).
 """
         )

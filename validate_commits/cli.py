@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from collections.abc import Sequence
 
 
-def _build_app() -> application.App:
+def _build_app(base_ref: str) -> application.App:
     config_file = Path('.validate-commits-config.toml')
     config = configuration.load_from_file(config_file)
 
@@ -29,10 +29,10 @@ def _build_app() -> application.App:
     )
     custom_checks = checks.get_custom_checks(config)
 
-    reporter = console_integration.Reporter()
+    reporter = console_integration.Reporter(base_ref=base_ref)
 
     return application.App(
-        commits=git_commits('main', 'HEAD'),
+        commits=git_commits(base_ref, 'HEAD'),
         checks=(
             *default_checks,
             *custom_checks,
@@ -46,14 +46,19 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog='validate-commits',
     )
-    _ = parser.parse_args(argv)
+    parser.add_argument(
+        '--since', type=str, default='main', help='check commits since this reference'
+    )
+    args = parser.parse_args(argv)
 
-    app = _build_app()
+    base_ref: str = args.since
+
+    app = _build_app(base_ref=base_ref)
 
     try:
         return app()
     except app.NoCommitsChecked:
-        print("No commits between 'main' and 'HEAD'.", file=sys.stderr)  # noqa: T201
+        print(f"No commits between {base_ref!r} and 'HEAD'.", file=sys.stderr)  # noqa: T201
         return 1
 
 
