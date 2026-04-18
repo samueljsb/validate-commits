@@ -29,14 +29,16 @@ def _build_app() -> application.App:
     )
     custom_checks = checks.get_custom_checks(config)
 
+    reporter = console_integration.Reporter()
+
     return application.App(
         commits=git_commits('main', 'HEAD'),
         checks=(
             *default_checks,
             *custom_checks,
         ),
-        report_error=console_integration.report_error,
-        report_summary=console_integration.report_summary,
+        report_error=reporter.report_error,
+        report_summary=reporter.report_summary,
     )
 
 
