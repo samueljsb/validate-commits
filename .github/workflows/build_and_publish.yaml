@@ -40,6 +40,9 @@ jobs:
           [ "v${{ steps.package_version.outputs.version }}" = "${{ github.ref_name }}" ]
       - name: check changelog includes version
         run: grep '## \[${{ steps.package_version.outputs.version }}\]' < CHANGELOG.md
+      - name: check pre-commit config example includes version
+        run: >
+          grep 'rev: v${{ steps.package_version.outputs.version }}' < README.md
 
   pypi:
     runs-on: ubuntu-24.04
