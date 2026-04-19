@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   allows a base reference to be provided.
   This facilitates checking commits since a default branch
   that is not called 'main'.
+- A [pre-commit](https://pre-commit.com) hook definition.
 
 ## [0.0.2] - 2026-03-31
 

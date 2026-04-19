@@ -60,3 +60,26 @@ e.g:
 pattern = '@example\.(com|net|org)$'
 message = "Fake email address provided."
 ```
+
+## `pre-commit`
+
+A pre-push hook is provided for `pre-commit`
+and can be configured in your `.pre-commit-config.yaml`:
+
+```yaml
+default_install_hook_types: [pre-commit, pre-push]
+default_stages: [pre-commit]
+
+repos:
+    # ...
+    - repo: https://github.com/samueljsb/validate-commits
+      rev: v0.0.3
+      hooks:
+          - id: validate-commits
+```
+
+N.B. This hook only runs in the pre-push stage.
+Therefore, the pre-push hook must be installed,
+which may require `pre-commit install` to be run again.
+To ensure _other_ hooks are not run unexpectedly during the pre-push stage,
+the default stage must be set at the top level.
