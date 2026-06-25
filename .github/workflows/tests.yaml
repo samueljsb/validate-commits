@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v6.2.0
         with:
           python-version: |
             3.13
@@ -41,7 +41,7 @@ jobs:
       - run: |
           git fetch origin main
           git branch main origin/main
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v6.2.0
         with:
           python-version-file: ".github/workflows/.python-version"
           cache: "pip"
